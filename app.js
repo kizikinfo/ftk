@@ -1,4 +1,4 @@
-var toktatam = 2;    
+var toktatam = 1;    
 var waittime = 20000; 
 var testemail = 2;
 
@@ -199,29 +199,54 @@ function comment(){
 						console.log(err+' occured here');
 						reject(err);
 					}
-					var document = cheerio.load($);
-					document('.a-card__inc').each(function(i, elem) {
-						var pictureelement = document(this).find('.a-card__image');
-						var elhref = 'https://krisha.kz'+pictureelement.attr('href');
-						var elprice = document(this).find('.a-card__price').text().trim();
-            if(elprice.indexOf('от')>-1){
-              elprice = elprice.replace('от', '');
+					var document = cheerio.load($); 
+					document('.row.vw-item.list-item').each(function(i, elem) {
+						var elprice = document(this).find('.price').text().trim();
+						var elhref = 'https://kolesa.kz'+document(this).children('.list-link.ddl_product_link').attr('href');
+						var elimgsource =  document(this).children('.list-link.ddl_product_link').find('picture').find('img').attr('src');
+						var elcondition = document(this).find('.a-info-mid').find('.desc').find('p').find('span').text().trim();
+						var eltitle = document(this).find('.a-el-info-title').text().trim();
+            var elgear = '';
+            if(document(this).find('.a-info-mid').find('.a-search-description').text().split('КПП')[1]){
+						  elgear = document(this).find('.a-info-mid').find('.a-search-description').text().split('КПП')[1].split(',')[0];
+            }else{
+              elgear = '';
             }
-						var eltitle = document(this).find('.a-card__title').text().trim();
-						var elsubtitle = document(this).find('.a-card__subtitle').text().trim();
-						var elimgsource = '';
-						if(pictureelement.find('img').attr('src').indexOf('https')===-1){
-							elimgsource = 'https:'+pictureelement.find('img').attr('src');
+            //console.log(elgear);
+						//var elyear = document(this).find('.a-info-mid').find('.desc').find('.year').text().trim();
+            var elyear = document(this).find('.a-info-mid').find('.a-search-description').text().split('КПП')[0].split(',')[0];
+						var elcapacityhelper = document(this).find('.a-info-mid').find('.desc').text().split('КПП')[0].split(',');
+						var elcapacity = elcapacityhelper[elcapacityhelper.length-3];
+						var elcity = document(this).find('.a-info-bot').find('.list-region').text().trim();
+						var conditiontext = '';
+						if(elimgsource.indexOf('https')===-1){
+							elimgsource = 'https:'+elimgsource;
 						}else{
-							elimgsource = pictureelement.find('img').attr('src');
+							elimgsource = elimgsource;
 						}
-						var o = {};
-						o.href = elhref;
-						o.title = elprice+', '+eltitle+', '+elsubtitle;
-						o.src = elimgsource;
-						o.price = elprice.replace(/\s+/g,"").slice(0, -1);
-						w.push(o);
-					});	
+						if(elcondition.indexOf('не на ходу')>-1){
+							conditiontext+='не на ходу';
+						}
+						if(elcondition.indexOf('аварийная')>-1){
+							conditiontext+='аварийная';
+						}
+						if(elcondition.indexOf('На заказ')>-1){
+							conditiontext+='На заказ';
+						}
+						if(!reg.test(conditiontext)){
+							//if(elimgsource.indexOf('gif')===-1){
+								//if(!elgear.match( /(вариатор|робот)/ )){
+									var o = {};
+									o.href = elhref;
+									o.title = eltitle+', '+elprice+', '+elyear+', КПП '+elgear+', '+elcapacity+', '+elcity;
+									o.src = elimgsource;
+									o.price = elprice.replace(/\s+/g,"").slice(0, -1);;
+									w.push(o);
+								//}
+							//}
+						}
+					});
+					//console.log(w);
 					if(w.length===0){
 						console.log('w array is empty');
 						resolve('empty1');
