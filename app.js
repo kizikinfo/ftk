@@ -47,7 +47,7 @@ if(toktatam===1){
 	console.log('toktattim');   
 }
 
-
+/*
 function getregexstr(){
 	if(regexstr){
 		var ar = regexstr.split(',');
@@ -67,7 +67,7 @@ if(generatedregex){
 }else{
 	reg = /$a/;
 }
-
+*/
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
