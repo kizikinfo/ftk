@@ -1,4 +1,4 @@
-var toktatam = 1;    
+var toktatam = 1;     
 var waittime = 20000; 
 var testemail = 2;
 
@@ -32,6 +32,8 @@ var Account = mongoose.model('accounts', Acc);
 var mainjson = process.env;
 var uname = mainjson.username;
 var w = [];
+var reg;
+var regexstr = mainjson.regx;
 var tgfuncounter;
 var tobesend = [];
 var urlmedia = 'https://api.telegram.org/bot'+mainjson.botauthtoken+'/sendMediaGroup?chat_id='+mainjson.chatid+'&media=';
@@ -43,6 +45,27 @@ if(toktatam===1){
   mongoose.connect(mainjson.mongolab);
 }else{
 	console.log('toktattim');   
+}
+
+
+function getregexstr(){
+	if(regexstr){
+		var ar = regexstr.split(',');
+		var vals = "";
+		for(var i=0; i<ar.length; i++){
+		vals += '|('+ar[i]+')';
+		}
+		return vals.substring(1);
+	}else{
+		return '';
+	}
+}
+
+var generatedregex = getregexstr();
+if(generatedregex){
+	reg = new RegExp(generatedregex);
+}else{
+	reg = /$a/;
 }
 
 
