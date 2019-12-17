@@ -238,7 +238,7 @@ function comment(){
             }
             //console.log(elgear);
 						//var elyear = document(this).find('.a-info-mid').find('.desc').find('.year').text().trim();
-            var elyear = document(this).find('.a-info-mid').find('.a-search-description').text().split('КПП')[0].split(',')[0];
+            var elyear = document(this).find('.a-info-mid').find('.a-search-description').text().split('КПП')[0].split(',')[0].replace(/ /g,'').replace(/(\r\n|\n|\r)/gm, "");
 						var elcapacityhelper = document(this).find('.a-info-mid').find('.desc').text().split('КПП')[0].split(',');
 						var elcapacity = elcapacityhelper[elcapacityhelper.length-3];
 						var elcity = document(this).find('.a-info-bot').find('.list-region').text().trim();
@@ -495,7 +495,7 @@ function sendViaTelegram(tgfunobj){
 		console.log('Message sent');
 		tobesend = [];
 		rstrt(tgfunobj);
-	}else{ 
+	}else{
 		request(urlmedia+JSON.stringify(tobesend[tgfuncounter]), { json: true }, (err, res, body) => {
 		  if (err) { return console.log(err); }
 		  //console.log(body);
